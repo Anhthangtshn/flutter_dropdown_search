@@ -15,29 +15,29 @@ class OptionsInput<T> extends StatefulWidget {
   final OptionsInputSuggestions<T> findSuggestions;
   final ValueChanged<T> onChanged;
   final OptionsBuilder<T> suggestionBuilder;
-  final TextEditingController textEditingController;
+  final TextEditingController? textEditingController;
   final double suggestionsBoxMaxHeight;
   final double inputHeight;
   final double spaceSuggestionBox;
-  final FocusNode focusNode;
-  final InputDecoration inputDecoration;
-  final TextInputAction textInputAction;
-  final TextStyle textStyle;
+  final FocusNode? focusNode;
+  final InputDecoration? inputDecoration;
+  final TextInputAction? textInputAction;
+  final TextStyle? textStyle;
   final double scrollPadding;
   final List<T> initOptions;
   final double borderRadius;
   final Color backgroundColor;
   final bool enabled;
-  final Function onTextChanged;
+  final Function? onTextChanged;
   final int maxLength;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
 
   const OptionsInput(
-      {Key key,
-      @required this.findSuggestions,
-      @required this.onChanged,
-      @required this.suggestionBuilder,
+      {Key? key,
+      required this.findSuggestions,
+      required this.onChanged,
+      required this.suggestionBuilder,
       this.textEditingController,
       this.focusNode,
       this.inputDecoration,
@@ -63,12 +63,12 @@ class OptionsInput<T> extends StatefulWidget {
 
 class OptionsInputState<T> extends State<OptionsInput<T>> {
   final _layerLink = LayerLink();
-  final _suggestionsStreamController = StreamController<List<T>>.broadcast();
+  final _suggestionsStreamController = StreamController<List<T>?>.broadcast();
   int _searchId = 0;
-  SuggestionsBoxController _suggestionsBoxController;
-  FocusNode _focusNode;
+  late SuggestionsBoxController _suggestionsBoxController;
+  late FocusNode _focusNode;
 
-  RenderBox get renderBox => context.findRenderObject();
+  RenderBox get renderBox => context.findRenderObject() as RenderBox ;
 
   @override
   void initState() {
@@ -86,7 +86,7 @@ class OptionsInputState<T> extends State<OptionsInput<T>> {
     return NotificationListener<SizeChangedLayoutNotification>(
       onNotification: (SizeChangedLayoutNotification val) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          _suggestionsBoxController.overlayEntry.markNeedsBuild();
+          _suggestionsBoxController.overlayEntry?.markNeedsBuild();
         });
         return true;
       },
@@ -153,10 +153,10 @@ class OptionsInputState<T> extends State<OptionsInput<T>> {
             ? Offset(0, -size.height - widget.spaceSuggestionBox)
             : Offset(0, widget.spaceSuggestionBox);
 
-        return StreamBuilder<List<T>>(
+        return StreamBuilder<List<T>?>(
           stream: _suggestionsStreamController.stream,
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data.isNotEmpty) {
+            if (snapshot.hasData && (snapshot.data?.isNotEmpty??false)) {
               var suggestionsListView = Material(
                 elevation: 4.0,
                 borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -168,9 +168,9 @@ class OptionsInputState<T> extends State<OptionsInput<T>> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return widget.suggestionBuilder(context, this, snapshot.data[index]);
+                      return widget.suggestionBuilder(context, this, snapshot.data![index]);
                     },
                   ),
                 ),

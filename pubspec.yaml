@@ -1,12 +1,11 @@
 name: flutter_dropdown_search
 description: A new Flutter package.
-version: 0.0.1
+version: 2.0.0
 author:
 homepage:
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
   flutter:
